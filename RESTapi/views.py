@@ -42,7 +42,7 @@ model = load_model('RESTapi/tfmodel.h5')
 #model = load_model('C:\\Users\\Acer\\Documents\\coding\\Upwork\\Sent Rest-API\\RESTapi\\tfmodel.h5')
 
 # GloVe
-glove_dir = '/app/data/RNN/'
+glove_dir = './data/RNN/'
 glove_100k_50d = 'glove.first-100k.6B.50d.txt'
 glove_100k_50d_path = os.path.join(glove_dir, glove_100k_50d)
 
@@ -183,10 +183,10 @@ class Classification(APIView):
     def post(self, request):
         try:
             # word to predict with VAD values
-            word = request.POST.get('word')
-            valance = request.POST.get('valance')
-            arousal = request.POST.get('arousal')
-            dominance = request.POST.get('dominance')
+            word = request.data.get('word') or ''
+            valance = request.data.get('valance') or 0.0
+            arousal = request.data.get('arousal') or 0.0
+            dominance = request.data.get('dominance') or 0.0
 
             # calling prediction function
             pred = predict_class(word, valance, arousal, dominance, model)
