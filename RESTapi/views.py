@@ -29,9 +29,8 @@ label_dict = dict(zip(main_labels, range(0, len(main_labels))))
 inv_label = {v: k for k, v in label_dict.items()}
 
 # Load the pretrained model
-#model = load_model('/app/RESTapi/tfmodel.h5')
-model = load_model(
-    'C:\\Users\\Acer\\Documents\\coding\\Upwork\\Sent Rest-API\\RESTapi\\tfmodel.h5')
+model = load_model('/app/RESTapi/tfmodel.h5')
+#model = load_model('C:\\Users\\Acer\\Documents\\coding\\Upwork\\Sent Rest-API\\RESTapi\\tfmodel.h5')
 
 # GloVe
 glove_dir = '/app/data/RNN/'
