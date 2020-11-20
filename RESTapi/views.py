@@ -32,12 +32,12 @@ model = load_model('/app/RESTapi/tfmodel.h5')
 #model = load_model('C:\\Users\\Acer\\Documents\\coding\\Upwork\\Sent Rest-API\\RESTapi\\tfmodel.h5')
 
 
-glove_dir = './data/RNN/'
+glove_dir = '/app/data/RNN/'
 glove_100k_50d = 'glove.first-100k.6B.50d.txt'
 glove_100k_50d_path = os.path.join(glove_dir, glove_100k_50d)
 
 # These are temporary files if we need to download it from the original source (slow)
-data_cache = './data/cache'
+data_cache = '/app/data/cache'
 glove_full_tar = 'glove.6B.zip'
 glove_full_50d = 'glove.6B.50d.txt'
 
