@@ -1,4 +1,3 @@
-import gloveword_embedding = glove.Glove.load_stanford(glove_100k_50d_path)
 import glove
 from django.shortcuts import render
 from rest_framework.views import APIView
