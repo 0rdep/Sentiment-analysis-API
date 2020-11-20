@@ -14,6 +14,15 @@ from tensorflow.keras.models import load_model
 from rest_framework.permissions import AllowAny
 from django.views.generic.base import TemplateView
 
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
+from .serializers import (
+    ClassificationGetResponseSerializer,
+    ClassificationPostRequestSerializer,
+    ClassificationPostSuccessResponseSerializer,
+    ClassificationPostErrorResponseSerializer
+)
+
 # category labels
 main_labels = ['confident', 'unconfident',
                'pos_hp', 'neg_hp',
@@ -29,7 +38,7 @@ label_dict = dict(zip(main_labels, range(0, len(main_labels))))
 inv_label = {v: k for k, v in label_dict.items()}
 
 # Load the pretrained model
-model = load_model('/app/RESTapi/tfmodel.h5')
+model = load_model('RESTapi/tfmodel.h5')
 #model = load_model('C:\\Users\\Acer\\Documents\\coding\\Upwork\\Sent Rest-API\\RESTapi\\tfmodel.h5')
 
 # GloVe
@@ -132,11 +141,26 @@ def predict_class(word, valence, arousal, dominance, model):
     return inv_label[np.argmax(prediction)]
 
 
+classificationPostSuccessResponseSerializer = openapi.Response(
+    'Success classification', ClassificationPostSuccessResponseSerializer)
+
+classificationPostErrorResponseSerializer = openapi.Response(
+    'Error on classification', ClassificationPostErrorResponseSerializer)
+
+classificationGetResponse = openapi.Response(
+    'Post request information', ClassificationGetResponseSerializer)
+
 # Classification call class
 class Classification(APIView):
 
     permission_classes = (AllowAny,)
 
+    @swagger_auto_schema(
+        operation_description="Get classification request information", 
+        responses={
+            200: classificationGetResponse
+        }
+    )
     def get(self, request, format=None):
         """API View"""
         data_view = ['word', 'valence', 'arousal', 'dominance']
@@ -147,6 +171,13 @@ class Classification(APIView):
                          'status': 'Success'
                          })
 
+    @swagger_auto_schema(
+        request_body=ClassificationPostRequestSerializer,
+        responses={
+            200: classificationPostSuccessResponseSerializer,
+            400: classificationPostErrorResponseSerializer
+        }
+    )
     def post(self, request):
         try:
             # word to predict with VAD values
