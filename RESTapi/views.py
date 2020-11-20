@@ -73,6 +73,16 @@ class Classification(APIView):
 
     permission_classes = (AllowAny,)
 
+    def get(self, request, format=None):
+        """API View"""
+        data_view = ['word', 'valence', 'arousal', 'dominance']
+        return JsonResponse({'url': '/classification',
+                             'type': 'POST',
+                             'data': data_view,
+                             'code': 200,
+                             'status': 'Success'
+                             })
+
     def post(self, request):
         try:
             # word to predict with VAD values
@@ -88,7 +98,7 @@ class Classification(APIView):
             return JsonResponse({'message': 'Prediction: ' + str(pred), 'code': 200, 'status': 'Success'})
         except Exception as e:
             print('email error:', e)
-            return JsonResponse({'message': 'Something went wrong', 'code': 500, 'status': 'Error', 'error': str(e)})
+            return JsonResponse({'message': 'Something went wrong', 'code': 400, 'status': 'Error', 'error': str(e)})
 
 
 class Home(TemplateView):
