@@ -1,3 +1,5 @@
+import gloveword_embedding = glove.Glove.load_stanford(glove_100k_50d_path)
+import glove
 from django.shortcuts import render
 from rest_framework.views import APIView
 from django.http import JsonResponse
@@ -27,6 +29,10 @@ inv_label = {v: k for k, v in label_dict.items()}
 # Load the pretrained model
 model = load_model('/app/RESTapi/tfmodel.h5')
 #model = load_model('C:\\Users\\Acer\\Documents\\coding\\Upwork\\Sent Rest-API\\RESTapi\\tfmodel.h5')
+
+
+# Due to size constraints, only use the first 100k vectors (i.e. 100k most frequently used words)
+word_embedding.word_vectors.shape
 
 
 def get_embedding_vec(word):
