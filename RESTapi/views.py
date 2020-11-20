@@ -151,12 +151,14 @@ classificationGetResponse = openapi.Response(
     'Post request information', ClassificationGetResponseSerializer)
 
 # Classification call class
+
+
 class Classification(APIView):
 
     permission_classes = (AllowAny,)
 
     @swagger_auto_schema(
-        operation_description="Get classification request information", 
+        operation_description="Get classification request information",
         responses={
             200: classificationGetResponse
         }
