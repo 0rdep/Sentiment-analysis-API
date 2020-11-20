@@ -1,3 +1,4 @@
+import glove
 import os
 import requests
 import shutil
@@ -28,10 +29,11 @@ label_dict = dict(zip(main_labels, range(0, len(main_labels))))
 inv_label = {v: k for k, v in label_dict.items()}
 
 # Load the pretrained model
-model = load_model('/app/RESTapi/tfmodel.h5')
-#model = load_model('C:\\Users\\Acer\\Documents\\coding\\Upwork\\Sent Rest-API\\RESTapi\\tfmodel.h5')
+#model = load_model('/app/RESTapi/tfmodel.h5')
+model = load_model(
+    'C:\\Users\\Acer\\Documents\\coding\\Upwork\\Sent Rest-API\\RESTapi\\tfmodel.h5')
 
-
+# GloVe
 glove_dir = '/app/data/RNN/'
 glove_100k_50d = 'glove.first-100k.6B.50d.txt'
 glove_100k_50d_path = os.path.join(glove_dir, glove_100k_50d)
