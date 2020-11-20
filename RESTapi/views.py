@@ -1,4 +1,3 @@
-import glove
 import os
 import requests
 import shutil
