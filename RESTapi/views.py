@@ -98,7 +98,7 @@ def get_embedding_vec(word):
     idx = word_embedding.dictionary.get(word.lower(), -1)
 
     if idx < 0:
-        return np.zeros((EMBEDDING_DIM, ), dtype='float32')  # UNK
+        return np.zeros((50, ), dtype='float32')  # UNK EMBEDDING_DIM=50
 
     return word_embedding.word_vectors[idx]
 
