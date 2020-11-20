@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
 from django.http import JsonResponse
+from rest_framework.response import Response
 
 import tensorflow as tf
 import numpy as np
@@ -24,7 +25,9 @@ label_dict = dict(zip(main_labels, range(0, len(main_labels))))
 inv_label = {v: k for k, v in label_dict.items()}
 
 # Load the pretrained model
-model = load_model('/app/RESTapi/tfmodel.h5')
+#model = load_model('/app/RESTapi/tfmodel.h5')
+model = load_model(
+    'C:\\Users\\Acer\\Documents\\coding\\Upwork\\Sent Rest-API\\RESTapi\\tfmodel.h5')
 
 
 def get_embedding_vec(word):
@@ -76,12 +79,12 @@ class Classification(APIView):
     def get(self, request, format=None):
         """API View"""
         data_view = ['word', 'valence', 'arousal', 'dominance']
-        return JsonResponse({'url': '/classification',
-                             'type': 'POST',
-                             'data': data_view,
-                             'code': 200,
-                             'status': 'Success'
-                             })
+        return Response({'url': '/classification',
+                         'type': 'POST',
+                         'data': data_view,
+                         'code': 200,
+                         'status': 'Success'
+                         })
 
     def post(self, request):
         try:
