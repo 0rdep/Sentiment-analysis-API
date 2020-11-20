@@ -1,4 +1,7 @@
 import glove
+import os
+import requests
+import shutil
 from django.shortcuts import render
 from rest_framework.views import APIView
 from django.http import JsonResponse
@@ -30,7 +33,61 @@ model = load_model('/app/RESTapi/tfmodel.h5')
 #model = load_model('C:\\Users\\Acer\\Documents\\coding\\Upwork\\Sent Rest-API\\RESTapi\\tfmodel.h5')
 
 
+glove_dir = './data/RNN/'
+glove_100k_50d = 'glove.first-100k.6B.50d.txt'
+glove_100k_50d_path = os.path.join(glove_dir, glove_100k_50d)
+
+# These are temporary files if we need to download it from the original source (slow)
+data_cache = './data/cache'
+glove_full_tar = 'glove.6B.zip'
+glove_full_50d = 'glove.6B.50d.txt'
+
+# force_download_from_original=False
+download_url = 'http://redcatlabs.com/downloads/deep-learning-workshop/notebooks/data/RNN/'+glove_100k_50d
+original_url = 'http://nlp.stanford.edu/data/'+glove_full_tar
+
+if not os.path.isfile(glove_100k_50d_path):
+    if not os.path.exists(glove_dir):
+        os.makedirs(glove_dir)
+
+    # First, try to download a pre-prepared file directly...
+    response = requests.get(download_url, stream=True)
+    if response.status_code == requests.codes.ok:
+        print("Downloading 42Mb pre-prepared GloVE file from RedCatLabs")
+        with open(glove_100k_50d_path, 'wb') as out_file:
+            shutil.copyfileobj(response.raw, out_file)
+    else:
+        # But, for some reason, RedCatLabs didn't give us the file directly
+        if not os.path.exists(data_cache):
+            os.makedirs(data_cache)
+
+        if not os.path.isfile(os.path.join(data_cache, glove_full_50d)):
+            zipfilepath = os.path.join(data_cache, glove_full_tar)
+            if not os.path.isfile(zipfilepath):
+                print("Downloading 860Mb GloVE file from Stanford")
+                response = requests.get(download_url, stream=True)
+                with open(zipfilepath, 'wb') as out_file:
+                    shutil.copyfileobj(response.raw, out_file)
+            if os.path.isfile(zipfilepath):
+                print("Unpacking 50d GloVE file from zip")
+                import zipfile
+                zipfile.ZipFile(zipfilepath, 'r').extract(
+                    glove_full_50d, data_cache)
+
+        with open(os.path.join(data_cache, glove_full_50d), 'rt') as in_file:
+            with open(glove_100k_50d_path, 'wt') as out_file:
+                print("Reducing 50d GloVE file to first 100k words")
+                for i, l in enumerate(in_file.readlines()):
+                    if i >= 100000:
+                        break
+                    out_file.write(l)
+
+        # Get rid of tarfile source (the required text file itself will remain)
+        # os.unlink(zipfilepath)
+        #os.unlink(os.path.join(data_cache, glove_full_50d))
+
 # Due to size constraints, only use the first 100k vectors (i.e. 100k most frequently used words)
+word_embedding = glove.Glove.load_stanford(glove_100k_50d_path)
 word_embedding.word_vectors.shape
 
 
